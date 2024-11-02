@@ -1,0 +1,48 @@
+-- Carrega a Orion Library
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source.lua"))()
+
+-- Cria uma nova janela com o nome "Bosta Hub"
+local Window = OrionLib:MakeWindow({Name = "Bosta Hub", HidePremium = false, SaveConfig = true})
+
+-- Variável para controle da velocidade
+local speedEnabled = false
+local originalSpeed = 16 -- Velocidade padrão no Roblox
+
+-- Função para alterar a velocidade do jogador
+local function toggleSpeed()
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("Humanoid") then
+        local humanoid = character:FindFirstChild("Humanoid")
+
+        if speedEnabled then
+            humanoid.WalkSpeed = originalSpeed -- Restaura a velocidade original
+        else
+            humanoid.WalkSpeed = originalSpeed * 2 -- Aumenta a velocidade (ajuste o fator conforme necessário)
+        end
+
+        speedEnabled = not speedEnabled
+    end
+end
+
+-- Adiciona um botão para ativar/desativar a velocidade
+Window:MakeTab({
+    Name = "Speed",
+    Icon = "rbxassetid://4483345998",
+    Premium = false
+}):AddToggle({
+    Name = "Ativar Velocidade Aumentada",
+    Default = false,
+    Callback = toggleSpeed
+})
+
+-- Inicializa a Orion Library
+OrionLib:Init()
+
+-- Mantém o script funcionando enquanto estiver no jogo
+game.Players.PlayerRemoving:Connect(function(player)
+    if player == game.Players.LocalPlayer then
+        OrionLib:Destroy()
+    end
+end)
