@@ -1,0 +1,91 @@
+if not game or not game:IsLoaded() then
+    print("Aguarde o jogo carregar...")
+    game.Loaded:Wait()
+end
+
+-- Prossiga com o script depois dessa verificação.
+-- Função para criar botões
+local function createButton(parent, text, position, onClick)
+    local Button = Instance.new("TextButton")
+    Button.Parent = parent
+    Button.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+    Button.Position = position
+    Button.Size = UDim2.new(0, 180, 0, 40) -- Largura e altura do botão
+    Button.Font = Enum.Font.SourceSansBold
+    Button.Text = text
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.TextSize = 18
+    Button.BorderSizePixel = 1
+    Button.BorderColor3 = Color3.fromRGB(255, 0, 0)
+
+    -- Conectar a função ao clique
+    Button.MouseButton1Click:Connect(onClick)
+end
+
+-- Funções dos botões
+local function deleteMap()
+    for _, obj in pairs(workspace:GetChildren()) do
+        if obj:IsA("BasePart") then
+            obj:Destroy()
+        end
+    end
+    print("Mapa deletado!")
+end
+
+local function kickPlayer()
+    local username = "JogadorExemplo" -- Substitua pelo nome do jogador
+    local target = game.Players:FindFirstChild(username)
+    if target then
+        target:Kick("Você foi expulso pelo Hub Troll.")
+        print("Jogador expulso: " .. username)
+    else
+        print("Jogador não encontrado.")
+    end
+end
+
+local function removeClothes()
+    local username = "JogadorExemplo" -- Substitua pelo nome do jogador
+    local target = game.Players:FindFirstChild(username)
+    if target and target.Character then
+        for _, obj in pairs(target.Character:GetChildren()) do
+            if obj:IsA("Clothing") or obj:IsA("Accessory") then
+                obj:Destroy()
+            end
+        end
+        print("Roupas removidas do jogador: " .. username)
+    else
+        print("Jogador não encontrado.")
+    end
+end
+
+local function killPlayer()
+    local username = "JogadorExemplo" -- Substitua pelo nome do jogador
+    local target = game.Players:FindFirstChild(username)
+    if target and target.Character then
+        target.Character.Humanoid.Health = 0
+        print("Jogador eliminado: " .. username)
+    else
+        print("Jogador não encontrado.")
+    end
+end
+
+local function spawnCreeper()
+    local username = "JogadorExemplo" -- Substitua pelo nome do jogador
+    local target = game.Players:FindFirstChild(username)
+    if target and target.Character then
+        local creeper = Instance.new("Model", workspace)
+        creeper.Name = "Creeper"
+        creeper.PrimaryPart = target.Character.HumanoidRootPart
+        creeper:SetPrimaryPartCFrame(target.Character.HumanoidRootPart.CFrame)
+        print("Creeper spawnado para o jogador: " .. username)
+    else
+        print("Jogador não encontrado.")
+    end
+end
+
+-- Criando botões e adicionando à interface
+createButton(Frame, "Deletar Mapa", UDim2.new(0.1, 0, 0.3, 0), deleteMap)
+createButton(Frame, "Kick Jogador", UDim2.new(0.6, 0, 0.3, 0), kickPlayer)
+createButton(Frame, "Remover Roupas", UDim2.new(0.1, 0, 0.5, 0), removeClothes)
+createButton(Frame, "Eliminar Jogador", UDim2.new(0.6, 0, 0.5, 0), killPlayer)
+createButton(Frame, "Spawnar Creeper", UDim2.new(0.1, 0, 0.7, 0), spawnCreeper)
